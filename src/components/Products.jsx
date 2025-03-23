@@ -13,6 +13,8 @@ const Products = () => {
   const [data, setData] = useState([]);
   const [likedProducts, setLikedProducts] = useState({});
   const addToCart = useCartStore((state) => state.addToCart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const cart = useCartStore((state) => state.cart); // Savatni olish
   const changeToLike = useLikeStore((state) => state.changeToLike);
 
   useEffect(() => {
@@ -34,6 +36,8 @@ const Products = () => {
       [product.id]: !prev[product.id],
     }));
   };
+
+  const isInCart = (productId) => cart.some((item) => item.id === productId); // Savatda bor-yo‘qligini tekshirish
 
   return (
     <div className="mt-24 mb-5 px-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -62,11 +66,16 @@ const Products = () => {
           </button>
           <h3 className="mt-2 font-semibold text-lg">{product?.title}</h3>
           <p className="text-sm text-gray-300">Brand: {product?.brand || "Unknown"}</p>
+          
           <button
-            className="w-full rounded-lg p-2 bg-blue-600 hover:bg-blue-700 cursor-pointer mt-2"
-            onClick={() => addToCart(product)}
+            className={`w-full rounded-lg p-2 mt-2 cursor-pointer ${
+              isInCart(product.id) ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
+            }`}
+            onClick={() =>
+              isInCart(product.id) ? removeFromCart(product.id) : addToCart(product)
+            }
           >
-            Add to Cart
+            {isInCart(product.id) ? "Remove from Cart" : "Add to Cart"}
           </button>
         </div>
       ))}
