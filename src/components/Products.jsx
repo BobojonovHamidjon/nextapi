@@ -76,7 +76,8 @@ const Products = () => {
             }
           >
             {isInCart(product.id) ? "Remove from Cart" : "Add to Cart"}
-          </button>
+          </button> 
+         
         </div>
       ))}
     </div>
